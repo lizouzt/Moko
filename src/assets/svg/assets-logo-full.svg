@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+	<svg class="icon" viewBox="0 0 660 660" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<title>WmsLogo</title>
+	  <g class="layer">
+	    <path d="m0.55,165.43c108.86,-54.96 220.9,-109.92 329.76,-164.88l329.52,164.88l0,329.78l-330.25,163.83l0,-330.83l-329.03,-162.78z" fill="currentcolor" id="svg_1" transform="matrix(1 0 0 1 0 0)"/>
+	    <path d="m0.55,225.44l0,108.13l162.24,77.4l0,163.26l111.47,54.07l0,-269.29l-273.71,-133.58z" fill="currentcolor" id="svg_2"/>
+	    <path d="m0.55,394l0,99.66l102.8,50.89l0,-100.72l-102.8,-49.83z" fill="currentcolor" id="svg_3"/>
+	  </g>
+	</svg>

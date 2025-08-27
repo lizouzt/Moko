@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>1.Icon/系统自带/文件彩/记事本</title>
+    <g id="1.Icon/系统自带/文件彩/记事本" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="文件类型-标准图-记事本" transform="translate(1.500000, 0.000000)" fill-rule="nonzero">
+            <path d="M1,0 L9,0 L13,4 L13,15 C13,15.5523 12.5523,16 12,16 L1,16 C0.4477,16 0,15.5523 0,15 L0,1 C0,0.4477 0.4477,0 1,0 Z" id="路径" fill="#8289AD"></path>
+            <polygon id="路径" fill="#FFFFFF" points="6.8892 12 6.8892 6.5966 9 6.5966 9 6 4.1 6 4.1 6.5966 6.2108 6.5966 6.2108 12"></polygon>
+            <path d="M9,0 L13,4 L10,4 C9.4477,4 9,3.5523 9,3 L9,0 Z" id="路径" fill="#CDCFDE"></path>
+        </g>
+    </g>
+</svg>

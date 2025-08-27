@@ -1,0 +1,167 @@
+/****************** TitleBar ********************/
+:root {
+  --title-bar-height: 35px;
+}
+
+.draggable {
+  app-region: drag;
+  /* Pre-fix app-region during standardization process */
+  -webkit-app-region: drag;
+}
+
+.nonDraggable {
+  app-region: no-drag;
+  /* Pre-fix app-region during standardization process */
+  -webkit-app-region: no-drag;
+}
+
+#titleBarContainer {
+  position: absolute;
+  top: 0;
+  height: var(--title-bar-height);
+  width: 100%;
+  color: #fff;
+  background-color:#262626;
+  user-select: none;
+  z-index: 9999;
+}
+
+#titleBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  user-select: none;
+  height: 100%;
+
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+}
+#titleBar > img {
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 0 10px;
+}
+#titleBar > span {
+  padding-right: var(--title-bar-height);
+}
+body {
+  &.darwin {
+    #titleBar {
+      justify-content: center;
+    }
+  }
+  &.linux {
+    #titleBarContainer {
+      display: none;
+    }
+
+    #root {
+      height: 100%;
+      top: 0;
+    }
+  }
+}
+/******************** TitleBar End ********************/
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-height: 100vh;
+  background-color: #181818;
+}
+
+#root {
+  margin: 0;
+  position: absolute;
+  inset: var(--title-bar-height) 0 0 0;
+  height: calc(100% - var(--title-bar-height));
+  width: 100%;
+  background-color: #181818;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+code {
+  // background-color: var(--td-bg-color-secondarycontainer);
+  // border-radius: 4px;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    // background-color: var(--td-bg-color-secondarycontainer);
+  }
+  code {
+    // background-color: var(--td-bg-color-secondarycontainer);
+  }
+}

@@ -1,0 +1,81 @@
+import React from 'react';
+import { Space, Button, Tooltip } from 'tdesign-react';
+import {
+  TextformatBoldIcon, TextformatItalicIcon, QuoteIcon, CodeIcon,
+  ListIcon, LinkIcon, ImageIcon, ViewListIcon,
+} from 'tdesign-icons-react';
+import styles from './index.module.less';
+
+const markdownToolbar = [
+  { key: 'bold', icon: <TextformatBoldIcon />, tooltip: '加粗', insert: '**粗体内容**', select: [2, 6] },
+  { key: 'italic', icon: <TextformatItalicIcon />, tooltip: '斜体', insert: '*斜体内容*', select: [1, 5] },
+  { key: 'quote', icon: <QuoteIcon />, tooltip: '引用', insert: '\n> 引用内容\n', select: [3, 7] },
+  { key: 'code', icon: <CodeIcon />, tooltip: '代码块', insert: '\n```js\n代码内容\n```\n', select: [7, 11] },
+  { key: 'ul', icon: <ViewListIcon />, tooltip: '无序列表', insert: '\n- 列表项1\n- 列表项2\n', select: [3, 7] },
+  { key: 'ol', icon: <ListIcon />, tooltip: '有序列表', insert: '\n1. 列表项1\n2. 列表项2\n', select: [3, 7] },
+  { key: 'link', icon: <LinkIcon />, tooltip: '链接', insert: '[链接文本](https://)', select: [1, 5] },
+  { key: 'image', icon: <ImageIcon />, tooltip: '图片', insert: '![alt](url)', select: [2, 5] },
+];
+
+interface Props {
+  editorRef: React.RefObject<any>;
+}
+
+const MarkdownToolbarButtons: React.FC<Props> = ({ editorRef }) => {
+  const handleToolbarClick = (item: typeof markdownToolbar[0]) => {
+        if (!editorRef.current) return;
+        // monaco-editor
+        if (editorRef.current.getModel) {
+        const editor = editorRef.current;
+        const selection = editor.getSelection();
+        const pos = selection ? editor.getModel().getOffsetAt(selection.getStartPosition()) : 0;
+        const value = editor.getValue();
+        const before = value.slice(0, pos);
+        const after = value.slice(pos);
+        editor.setValue(before + item.insert + after);
+        // 选中插入内容
+        const start = before.length + (item.select ? item.select[0] : 0);
+        const end = before.length + (item.select ? item.select[1] : item.insert.length);
+        editor.setSelection({
+            startLineNumber: editor.getModel().getPositionAt(start).lineNumber,
+            startColumn: editor.getModel().getPositionAt(start).column,
+            endLineNumber: editor.getModel().getPositionAt(end).lineNumber,
+            endColumn: editor.getModel().getPositionAt(end).column,
+        });
+        editor.focus();
+        return;
+        }
+        // textarea
+        const textarea = editorRef.current as HTMLTextAreaElement;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const value = textarea.value;
+        const before = value.substring(0, start);
+        const after = value.substring(end);
+        textarea.value = before + item.insert + after;
+        textarea.selectionStart = start + (item.select ? item.select[0] : 0);
+        textarea.selectionEnd = start + (item.select ? item.select[1] : item.insert.length);
+        textarea.focus();
+        // 触发onChange
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
+    };
+
+    return (
+        <Space align="center" size={2} className={styles.markdownToolbar}>
+        {markdownToolbar.map(item => (
+            <Tooltip key={item.key} content={item.tooltip} showArrow placement="bottom-left">
+              <Button
+                shape="circle"
+                variant="text"
+                size="medium"
+                icon={item.icon}
+                onClick={() => handleToolbarClick(item)}
+              />
+            </Tooltip>
+        ))}
+        </Space>
+    );
+};
+
+export default MarkdownToolbarButtons;

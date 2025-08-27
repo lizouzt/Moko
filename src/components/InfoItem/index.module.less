@@ -1,0 +1,124 @@
+.info {
+	box-sizing: border-box;
+	border: 1px solid var(--td-component-border);
+	line-height: var(--td-line-height-headline-small);
+	display: flex;
+	width: 100%;
+	margin-bottom: -1px;
+	margin-right: -1px;
+	&:last-child {
+		margin-right: 0;
+		.valueWrap {
+			margin-right: 0;
+		}
+	}
+	&.vertical {
+		.valueWrap {
+			margin-right: 0;
+		}
+	}
+	&.multiple {
+  	.value {
+  		overflow: hidden;
+    	white-space: break-spaces;
+    	line-height: var(--td-line-height-link-small);
+    	min-height: var(--td-line-height-link-small);
+    	padding-top: var(--td-size-3);
+    	padding-bottom: var(--td-size-3);
+    	word-break: break-all;
+  	}
+  	.label {
+  		
+  	}
+  }
+  .valueWrap {
+  	width: 100%;
+  	overflow: hidden;
+  	border-left: 1px solid var(--td-component-border);
+
+  	.value {
+  		border-bottom: 1px solid var(--td-component-border);
+  		&:last-child {
+  			border-bottom: none;
+  		}
+  	}
+  }
+}
+.txtCenter {
+	.label {
+		text-align: center;
+	}
+	.value {
+		text-align: center;
+	}
+}
+.label {
+  color: var(--td-text-color-primary);
+  background-color: var(--td-bg-color-page);
+  font-size: var(--td-font-size-title-small);
+  min-height: var(--td-line-height-headline-small);
+  font-weight: 400;
+  padding: 0 var(--td-comp-paddingLR-m);
+  vertical-align: middle;
+  white-space: nowrap;
+  flex: 116px 0 0;
+  text-align: left;
+}
+.value {
+  font-size: var(--td-font-size-title-small);
+  font-weight: 400;
+	color: var(--td-text-color-primary);
+	background-color: var(--td-bg-color-container);
+	min-height: var(--td-line-height-headline-small);
+  max-width: 100%;
+  min-width: 0;
+  flex: 80px 1 1;
+  overflow: hidden;
+  background-color: ;
+  padding: 0 var(--td-comp-paddingLR-m);
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  white-space: nowrap;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	.info {
+		flex: 30%;
+		margin: 0 1.5% var(--td-comp-margin-m);
+	}
+}
+
+.inline {
+	flex: 1 1;
+}
+
+.alternate {
+	&.info {
+		display: inline-block;
+		width: auto;
+		flex: 1 1;
+		border-right-width: 0;
+		> div {
+			text-align: center;
+		}
+	}
+	&:last-child {
+		border-right-width: 1px;
+	}
+	.label {
+		border-bottom: 1px solid var(--td-component-border);
+	}
+	.value {
+		margin-right: 0;
+		border-left: none;
+	}
+}
+
+.inlineList {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}

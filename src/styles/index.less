@@ -1,0 +1,230 @@
+:root {
+  --deep-color: #978961;
+  --tint-color: #efe5d4;
+  --animation-name-breathe: breathe;
+}
+
+a:-webkit-any-link {
+  color: var(--td-brand-color);
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  font: var(--td-font-link-small);
+  outline: none;
+  padding: 0;
+  position: relative;
+  text-decoration: none;
+  transition: all .2s linear;
+}
+
+.c-icon + .t-menu__content {
+  margin-left: var(--td-comp-margin-s);
+}
+
+@keyframes breathe {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .1;
+  }
+}
+/**************** end ****************/
+
+@font-face {
+  font-family: Good Brush;
+  src: local(Good Brush),url("https://gbuy.oss-cn-shanghai.aliyuncs.com/fonts/Good%20Brush.woff")format("woff");
+  font-display: block
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  /* electron宽度计算 */
+  width: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/************** 覆盖 ***************************/
+.t-dialog__body, .t-dialog__body--icon, .t-dialog__body__icon {
+  padding-bottom: var(--td-comp-margin-xxl);
+}
+
+/************** functional class ***************/
+.hide {
+  opacity: 0;
+}
+.hidden {
+  display: none;
+}
+
+/** 基础文字控制 */
+.fcenter {
+  text-align: center;
+}
+
+.ftitle {
+  font: var(--td-font-title-medium);
+  color: var(--td-text-color-primary);
+  &.small {
+    font: var(--td-font-title-small);
+  }
+  &.large {
+    font: var(--td-font-title-large);
+  }
+}
+.ftip {
+  font: var(--td-font-link-medium);
+  color: var(--td-text-color-placeholder);
+  &.small {
+    font: var(--td-font-link-small);
+  }
+  .large {
+    font: var(--td-font-link-large);
+  }
+}
+/** end 基础文字控制 */
+
+/**
+ * 文字段落遮照省略
+ */
+.ellipsis(@n) when (@n > 0) {
+  .elps-@{n} {
+    // display: -webkit-box; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: @n;
+  }
+  .ellipsis(@n - 1);
+}
+.ellipsis(5);
+
+.marginAndPading(@n, @direction, @tail) when (@n >= -20) {
+  body {
+    .m@{direction}-@{n} {
+      margin-@{tail}: @n*4px;
+    }
+    .m-@{n} {
+      margin: @n*4px;
+    }
+    .p@{direction}-@{n} {
+      padding-@{tail}: @n*4px;
+    }
+    .p-@{n} {
+      padding: @n*4px;
+    }
+  }
+  .marginAndPading(@n - 1, @direction, @tail);
+}
+.marginAndPading(20, t, top);
+.marginAndPading(20, b, bottom);
+.marginAndPading(20, l, left);
+.marginAndPading(20, r, right);
+
+/**
+ * flex space-between & center
+ */
+.flex{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &.ai-start {
+    align-items: flex-start;
+  }
+  &.jc-start {
+    justify-content: flex-start;
+  }
+  &.jc-end {
+    justify-content: flex-end;
+  }
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.vertical {
+    flex-direction: column;
+  }
+}
+/************** functional class end ***************/
+
+.view-back {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: var(--td-bg-color-container);
+  box-shadow: var(--td-shadow-2);
+  font-size: 26px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color .2s ease;
+  z-index: 5;
+  transition: left .2s ease-in-out;
+
+  &:hover{
+    background-color: var(--td-bg-color-container-hover);
+  }
+  svg{
+    width: 20px;
+    height: 20px;
+  }
+}
+.view-back {
+  position: fixed;
+  top: 146px;
+  left: 256px;
+}
+.list-page-back {
+  width: 96px;
+  height: 28px;
+  background-color: var(--td-bg-color-container);
+  box-shadow: var(--td-shadow-9);
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color .2s ease;
+  z-index: 5;
+
+  &:hover{
+    background-color: var(--td-bg-color-container-hover);
+  }
+
+  position: absolute;
+  top: calc(0px - (var(--td-comp-margin-s) + var(--td-line-height-body-medium) + var(--td-comp-margin-m) - 28px) / 2 - 28px);
+  right: var(--td-comp-margin-m);
+
+  svg{
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.menuCollapsed .view-back {
+  left: 90px;
+}
+
+.comp-loading {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}

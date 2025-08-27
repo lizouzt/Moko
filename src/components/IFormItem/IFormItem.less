@@ -1,0 +1,36 @@
+.model_form_item{
+	.t-form__label--right{
+		padding-right: 16px;
+	}
+	.t-form__controls-content{
+		width: 198px;
+	}
+	.t-date-picker, .t-date-range-picker{
+		width: 100%;
+	}
+	textarea{
+		&.no-resize{
+			resize: none;
+		}
+		&.resize{
+			resize: vertical;
+		}
+	}
+
+	&.auto {
+		.t-form__controls-content{
+			width: auto;
+		}
+	}
+}
+
+/***************** UI库覆盖 ******************/
+.t-input-adornment {
+  width: 100%;
+}
+.t-drawer__body {
+  .model_form_item .t-form__controls-content {
+    width: auto;
+  }
+}
+/************** functional class ***************/

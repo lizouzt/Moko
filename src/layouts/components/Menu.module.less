@@ -1,0 +1,45 @@
+.menuPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menuOperationWrapper{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.menuTip {
+  color: var(--td-text-color-primary);
+  font: var(--td-font-link-small);
+  opacity: 0.4;
+  height: 38px;
+  line-height: 38px;
+  text-align: center;
+}
+
+.menuLogo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  color: var(--td-brand-color);
+  border-radius: 20%;
+  svg{
+    height: 32px;
+    width: auto;
+  }
+  .title {
+    color: #fff;
+    font: var(--td-font-title-large);
+    font-style: italic;
+    margin-left: 8px;
+  }
+}
+.logoFull {
+  color: var(--td-text-color-primary);
+  width: 184px;
+  height: 32px;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>1.Icon/系统自带/文件彩/ppt</title>
+    <g id="1.Icon/系统自带/文件彩/ppt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="文件类型-标准图-幻灯片" transform="translate(1.500000, 0.000000)" fill-rule="nonzero">
+            <path d="M1,0 L9,0 L13,4 L13,15 C13,15.5523 12.5523,16 12,16 L1,16 C0.4477,16 0,15.5523 0,15 L0,1 C0,0.4477 0.4477,0 1,0 Z" id="路径" fill="#F69744"></path>
+            <path d="M5.1859,12 L5.1859,9.5462 L6.934,9.5462 C8.3058,9.5462 9,8.9496 9,7.7647 C9,6.5882 8.3141,6 6.9424,6 L4.5,6 L4.5,12 L5.1859,12 Z M6.9006,8.9496 L5.1859,8.9496 L5.1859,6.5966 L6.9006,6.5966 C7.3773,6.5966 7.7286,6.6891 7.9628,6.8908 C8.197,7.0672 8.3141,7.3613 8.3141,7.7648 C8.3141,8.1681 8.1971,8.4622 7.9711,8.6555 C7.737,8.8487 7.3857,8.9495 6.9006,8.9495 L6.9006,8.9496 Z" id="形状" fill="#FFFFFF"></path>
+            <path d="M9,0 L13,4 L10,4 C9.4477,4 9,3.5523 9,3 L9,0 Z" id="路径" fill="#FFD6AA"></path>
+        </g>
+    </g>
+</svg>
