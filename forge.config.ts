@@ -12,7 +12,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     icon: 'public/icon',
-    // extraResource: ["./node_modules/better-sqlite3"]
+    // extraResource: ["./node_modules/better-sqlite3"],
   },
   rebuildConfig: {
     onlyModules: [],
@@ -20,6 +20,7 @@ const config: ForgeConfig = {
   },
   makers: [
     new MakerSquirrel({
+      name: 'Moko',
       setupIcon: 'public/icon.ico',
     }), 
     new MakerZIP({}, ['darwin']), 
