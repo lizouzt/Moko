@@ -39,11 +39,11 @@ const config: ForgeConfig = {
         repository: {
           owner: 'lizouzt',
           name: 'Moko',
-          authToken: process.env.GITHUB_TOKEN
         },
-        draft: true,
+        draft: false,
         prerelease: false,
-        generateReleaseNotes: true
+        generateReleaseNotes: true,
+        authToken: process.env.GITHUB_TOKEN,
       }
     }
   ],
