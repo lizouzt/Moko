@@ -1,47 +1,58 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { app } from 'electron';
+import Store from 'electron-store'
+import pkg from '../../package.json'
 
-interface File {
-  filename: string;
-  content: string;
+export interface File {
+  filename: string
+  content: string
 }
 
-const dbPath = path.join(app.getPath('userData'), 'moko.db');
-const db = new Database(dbPath);
-console.log('sqlite3 initialized path', dbPath);
+type FilesMap = Record<string, string>
 
-// 初始化表
-db.exec(`
-  CREATE TABLE IF NOT EXISTS files (
-    filename TEXT PRIMARY KEY,
-    content TEXT NOT NULL
-  );
-`);
+const store = new Store<{
+  files: FilesMap
+  fileList: string[]
+}>({
+  name: pkg.productName,
+  defaults: {
+    files: {},
+    fileList: [],
+  },
+  schema: {
+    files: { type: 'object', patternProperties: { '.*': { type: 'string' } } },
+    fileList: { type: 'array', items: { type: 'string' } },
+  },
+})
 
+// 获取所有文件名列表
 export function getFileList(): string[] {
-  const rows = db.prepare<string[], File>(`SELECT filename FROM files`).all();
-  return rows.map(r => r.filename);
+  return store.get('fileList') ?? []
 }
 
+// 保存文件名列表（自动同步 files 字典，删除不存在的内容）
 export function saveFileList(list: string[]): void {
-  // 文件列表由所有文件名组成，实际存储在 files 表
-  // 可忽略此函数，或用于同步删除不存在的文件
-  const existFiles = getFileList();
-  const toDelete = existFiles.filter(f => !list.includes(f));
-  toDelete.forEach(f => {
-    db.prepare('DELETE FROM files WHERE filename = ?').run(f);
-  });
+  const files = store.get('files') ?? {}
+  // 删除 files 中未在 list 的项
+  Object.keys(files).forEach(f => {
+    if (!list.includes(f)) delete files[f]
+  })
+  store.set('files', files)
+  store.set('fileList', list)
 }
 
+// 保存文件内容（自动补全 fileList，保证一致性）
 export function saveFileContent(filename: string, content: string): void {
-  db.prepare(`
-    INSERT INTO files (filename, content) VALUES (?, ?)
-    ON CONFLICT(filename) DO UPDATE SET content=excluded.content
-  `).run(filename, content);
+  const files = store.get('files') ?? {}
+  files[filename] = content
+  store.set('files', files)
+  let fileList = store.get('fileList') ?? []
+  if (!fileList.includes(filename)) {
+    fileList.push(filename)
+    store.set('fileList', fileList)
+  }
 }
 
+// 获取文件内容
 export function getFileContent(filename: string): string {
-  const row = db.prepare<string, File>('SELECT content FROM files WHERE filename = ?').get(filename);
-  return row?.content || '';
+  const files = store.get('files') ?? {}
+  return files[filename] ?? ''
 }

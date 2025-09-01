@@ -36,7 +36,7 @@ const MarkDown: React.FC = () => {
 
   const handleContentChange = (val: string) => {
     setContent(val)
-    localStorage.setItem(LOCAL_KEY, val)
+    saveFileContent(currentFile, content)
   }
 
   const handleImportFile = () => {
@@ -73,7 +73,6 @@ const MarkDown: React.FC = () => {
       if (autoName) {
         console.log('autoName', autoName)
         finalName = autoName
-        localStorage.removeItem(`markdown-file-${filename}`)
       }
     }
     const newList: FileList = [finalName, ...fileList.filter(f => f !== filename && f !== finalName)]
@@ -106,7 +105,6 @@ const MarkDown: React.FC = () => {
     saveFileList(newList)
     const content = await getFileContent(oldName)
     saveFileContent(newName, content)
-    localStorage.removeItem(`markdown-file-${oldName}`)
     if (currentFile === oldName) setCurrentFile(newName)
     MessagePlugin.success('重命名成功')
   }
@@ -115,7 +113,6 @@ const MarkDown: React.FC = () => {
     const newList: FileList = fileList.filter(f => f !== filename)
     setFileList(newList)
     saveFileList(newList)
-    localStorage.removeItem(`markdown-file-${filename}`)
     if (currentFile === filename && newList.length > 0) {
       setCurrentFile(newList[0])
       setContent(await getFileContent(newList[0]))
@@ -128,7 +125,7 @@ const MarkDown: React.FC = () => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `markdown_${Date.now()}.md`
+    a.download = `${currentFile||'moko'}.md`
     a.click()
     URL.revokeObjectURL(url)
     MessagePlugin.success('已下载')
@@ -139,7 +136,6 @@ const MarkDown: React.FC = () => {
       const newList: FileList = fileList.filter(f => f !== currentFile)
       setFileList(newList)
       saveFileList(newList)
-      localStorage.removeItem(`markdown-file-${currentFile}`)
     }
     if (filename !== currentFile) {
       handleSave(true)
