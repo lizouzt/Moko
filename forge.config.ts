@@ -7,12 +7,12 @@ import { MakerDMG } from '@electron-forge/maker-dmg'
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import 'dotenv/config';
 
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     icon: 'public/icon',
-    // extraResource: ["./node_modules/better-sqlite3"],
   },
   rebuildConfig: {
     onlyModules: [],
@@ -38,7 +38,8 @@ const config: ForgeConfig = {
       config: {
         repository: {
           owner: 'lizouzt',
-          name: 'Moko'
+          name: 'Moko',
+          authToken: process.env.GITHUB_TOKEN
         },
         draft: true,
         prerelease: false,
