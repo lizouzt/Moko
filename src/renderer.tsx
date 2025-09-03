@@ -5,6 +5,7 @@ import store from 'modules/store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider } from 'tdesign-react'
 import zhConfig from 'tdesign-react/es/locale/zh_CN'
+import enConfig from 'tdesign-react/es/locale/en_US'
 import merge from 'lodash/merge'
 import App from './layouts/index'
 
@@ -13,8 +14,9 @@ import './styles/theme.less'
 import './styles/index.less'
 import './index.less'
 
-let appRoot: Root
+const defaultLanguageConfig = navigator.language === 'zh-CN' ? zhConfig : enConfig
 
+let appRoot: Root
 const renderApp = (mainProps: any = {}) => {
   const htmlContainer = document.getElementById('root') as Element
   appRoot = createRoot(htmlContainer)
@@ -22,7 +24,7 @@ const renderApp = (mainProps: any = {}) => {
   appRoot.render(
     <Provider store={store}>
       <Router basename={'/'}>
-          <ConfigProvider globalConfig={merge(zhConfig, {})}>
+          <ConfigProvider globalConfig={merge(defaultLanguageConfig, {})}>
             <App />
           </ConfigProvider>
       </Router>

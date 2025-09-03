@@ -34,6 +34,7 @@ const createWindow = () => {
     show: false,
     frame: false,
     icon: join(__dirname,'./public/icon.png'),
+    minWidth: 678,
     // remove the default titlebar
     titleBarStyle: 'hidden',
     // expose window controls in Windows/Linux
@@ -73,7 +74,7 @@ const createWindow = () => {
   })
 
   mainWindow.on('closed', () => {
-    log.info('fuck here closed')
+    log.info('closed')
     mainWindow = null
   })
 

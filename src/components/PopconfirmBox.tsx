@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Textarea, FormRule, FormInstanceFunctions, Popconfirm, Form } from 'tdesign-react'
+import { Button, Textarea, FormRule, FormInstanceFunctions, Popconfirm, Form, PopconfirmProps } from 'tdesign-react'
 import { IResponse } from 'utils/request'
 
 const { FormItem } = Form
@@ -17,9 +17,9 @@ export default (
     label?: string
     visibleCheck?: () => boolean
     onConfirm: ({ reason }: { reason: string }) => Promise<Partial<IResponse>>
-  }>,
+  } & Omit<PopconfirmProps, 'onConfirm' | 'content'>>,
 ) => {
-  const { title, label = '请输入', onConfirm, visibleCheck } = props
+  const { title, label = '请输入', onConfirm, visibleCheck, ...rest } = props
   const [isPosting, setPosting] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
 
@@ -67,6 +67,7 @@ export default (
           setVisible(false)
         }
       }}
+      {...rest}
     >
       <span
         onClick={() => {

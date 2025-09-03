@@ -30,7 +30,10 @@ const MarkdownHistory: React.FC<Props> = ({ list, onSelect, selected, onRename, 
             {item.slice(0, 30)}
           </span>
           <span className={styles.historyListItemActions}>
-            <PopconfirmBox title={`重命名“${item.slice(-10)}”？`} onConfirm={({ reason: newName }) => onRename(item, newName)}>
+            <PopconfirmBox 
+              placement='bottom'
+              title={`重命名“${item.slice(-10)}”？`} 
+              onConfirm={({ reason: newName }) => onRename(item, newName)}>
               <Button
                 className="ml-"
                 icon={<EditIcon />}
@@ -38,7 +41,10 @@ const MarkdownHistory: React.FC<Props> = ({ list, onSelect, selected, onRename, 
                 variant="text"
               />
             </PopconfirmBox>
-            <Popconfirm content={`确认删除文件“${item.slice(-6)}”？`} onConfirm={() => onDelete(item)}>
+            <Popconfirm 
+              placement='bottom'
+              content={`确认删除文件“${item.slice(-6)}”？`} 
+              onConfirm={() => onDelete(item)}>
               <Button
                 className="ml-2"
                 icon={<DeleteIcon />}

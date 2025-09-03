@@ -1,9 +1,14 @@
-import React, { useCallback, useState } from 'react'
-import { Space, Button, Tooltip, Radio, Dropdown } from 'tdesign-react'
-import { MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, MoreIcon, FileImportIcon, FileExportIcon, SettingIcon } from 'tdesign-icons-react'
+import React, { useCallback, useState, useEffect } from 'react'
+import { Space, Button, Tooltip, Radio, Dropdown, Menu } from 'tdesign-react'
+import {
+  MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, MoreIcon,
+  FileImportIcon, FileExportIcon, SettingIcon
+} from 'tdesign-icons-react'
 import { useAppDispatch } from 'modules/store'
 import { toggleSetting } from 'modules/global'
 import MarkdownToolbarButtons from './MarkdownToolbarButtons'
+import Toolbar from './components/Toolbar'
+import ToolbarButtons from './components/ToolbarButtons'
 import styles from './index.module.less'
 
 type SplitMode = 'vertical' | 'horizontal' | 'edit' | 'preview'
@@ -58,70 +63,72 @@ const MarkdownToolbar: React.FC<Props> = ({
     } else {
       await restProps[key as keyof typeof restProps]?.()
     }
-  }, [])
+  }, [dispatch, restProps])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= MINIVIEWWIDTH)
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  // 右侧按钮分组
+  const mainRightButtons = isMobile ? rightButtons.slice(0, 2) : rightButtons
+  const moreRightButtons = isMobile ? rightButtons.slice(2) : []
+
   return (
-    <div className={styles.toolbar}>
-      <Space align="center" size={16} className={styles.toolbarLeft}>
-        <Tooltip content="记录" placement='bottom'>
-          <Button
-            shape="circle"
-            variant="text"
-            size="large"
-            icon={<MenuUnfoldIcon />}
-            onClick={onShowHistory}
-          />
-        </Tooltip>
-        <MarkdownToolbarButtons editorRef={monacoEditorRef} />
-        <Radio.Group
-          value={splitMode}
-          onChange={val => setSplitMode(val as SplitMode)}
-          variant="outline"
-          size="small"
-        >
-          <Radio.Button value="horizontal">左右分屏</Radio.Button>
-          <Radio.Button value="vertical">上下分屏</Radio.Button>
-          <Radio.Button value="edit">仅编辑</Radio.Button>
-          <Radio.Button value="preview">仅预览</Radio.Button>
-        </Radio.Group>
-      </Space>
-      <Space align="center" size={8} className={styles.toolbarRight}>
-        {
-          (isMobile ? rightButtons.slice(0, 2) : rightButtons).map(btn => (
-            <Tooltip key={btn.key} content={btn.tooltip} placement="bottom">
-              <Button
-                shape="circle"
-                variant="text"
-                size="large"
-                icon={btn.icon}
-                onClick={() => buttonHandlers(btn.onClick)}
-              />
-            </Tooltip>
-          ))
-        }
-        {isMobile ? (
-          <Dropdown
-            placement="bottom"
-            trigger="click"
-            options={rightButtons.slice(2).map(item => ({
-              value: item.key,
-              content: item.tooltip,
-              prefixIcon: item.icon,
-              loading: item.onClick === RightBtnEvent.Pdf && exporting,
-              onClick: () => buttonHandlers(item.onClick),
-            }))}
+    <Toolbar left={
+        <Space align="center" size={16} className={styles.toolbarLeft}>
+          <Tooltip content="记录" placement='bottom'>
+            <Button
+              shape="circle"
+              variant="text"
+              size="large"
+              icon={<MenuUnfoldIcon />}
+              onClick={onShowHistory}
+            />
+          </Tooltip>
+          <MarkdownToolbarButtons editorRef={monacoEditorRef} />
+          <Radio.Group
+            value={splitMode}
+            onChange={val => setSplitMode(val as SplitMode)}
+            variant="outline"
+            size="small"
           >
-            <Button shape="circle" variant="text" size="large" icon={<MoreIcon />} />
-          </Dropdown>
-        ) : null}
-      </Space>
-    </div>
+            <Radio.Button value="horizontal">左右分屏</Radio.Button>
+            <Radio.Button value="vertical">上下分屏</Radio.Button>
+            <Radio.Button value="edit">仅编辑</Radio.Button>
+            <Radio.Button value="preview">仅预览</Radio.Button>
+          </Radio.Group>
+        </Space>
+      }
+      right={
+        <Space align="center" size={8} className={styles.toolbarRight}>
+          <ToolbarButtons
+            buttons={mainRightButtons.map(btn => ({
+              key: btn.key,
+              icon: btn.icon,
+              tooltip: btn.tooltip,
+              onClick: () => buttonHandlers(btn.onClick),
+            }))}
+          />
+          {isMobile && moreRightButtons.length > 0 && (
+            <Dropdown
+              placement="bottom"
+              trigger="click"
+              options={moreRightButtons.map(item => ({
+                value: item.key,
+                content: item.tooltip,
+                prefixIcon: item.icon,
+                loading: item.onClick === RightBtnEvent.Pdf && exporting,
+                onClick: () => buttonHandlers(item.onClick),
+              }))}
+            >
+              <Button shape="circle" variant="text" size="large" icon={<MoreIcon />} />
+            </Dropdown>
+          )}
+        </Space>
+      }
+    />
   )
 }
 
