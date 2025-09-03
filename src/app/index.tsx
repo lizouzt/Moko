@@ -6,7 +6,7 @@ import { useAppSelector } from 'modules/store'
 import MarkdownEditor from './MarkdownEditor'
 import MarkdownPreview from './MarkdownPreview'
 import MarkdownHistory from './MarkdownHistory'
-import { getFileList, getFileContent, saveFileList, saveFileContent, exportPdf } from './utils'
+import { getFileList, getFileContent, saveFileList, saveFileContent, renameFile, deleteFile, exportPdf } from './utils'
 import CommonStyle from 'styles/common.module.less'
 import { AUTO_SAVE_INTERVAL, getUniqueUntitledName, getAutoFileName, UNTITLED_PREFIX } from './config'
 import styles from 'app/index.module.less'
@@ -100,19 +100,20 @@ const MarkDown: React.FC = () => {
       MessagePlugin.error('文件名已存在')
       return
     }
-    const newList: FileList = fileList.map(f => (f === oldName ? newName : f))
+    renameFile(oldName, newName)
+    const newList: FileList = await getFileList()
     setFileList(newList)
-    saveFileList(newList)
-    const content = await getFileContent(oldName)
-    saveFileContent(newName, content)
-    if (currentFile === oldName) setCurrentFile(newName)
+    if (currentFile === oldName) {
+      setCurrentFile(newName)
+      setContent(await getFileContent(newName))
+    }
     MessagePlugin.success('重命名成功')
   }
 
   const handleDeleteFile = async (filename: FileName) => {
-    const newList: FileList = fileList.filter(f => f !== filename)
+    deleteFile(filename)
+    const newList: FileList = await getFileList()
     setFileList(newList)
-    saveFileList(newList)
     if (currentFile === filename && newList.length > 0) {
       setCurrentFile(newList[0])
       setContent(await getFileContent(newList[0]))

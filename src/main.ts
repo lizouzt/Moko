@@ -27,8 +27,6 @@ if (!app.requestSingleInstanceLock()) {
 let mainWindow: BrowserWindow | null = null
 const indexHtml = join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
 const preload = join(__dirname, 'preload.js')
-console.log('indexHtml', indexHtml)
-console.log('preload', preload)
 
 const createWindow = () => {
   // Create the browser window.
@@ -129,6 +127,8 @@ ipcMain.handle('getFileList', () => db.getFileList())
 ipcMain.handle('saveFileList', (_event, list) => db.saveFileList(list))
 ipcMain.handle('saveFileContent', (_event, filename, content) => db.saveFileContent(filename, content))
 ipcMain.handle('getFileContent', (_event, filename) => db.getFileContent(filename))
+ipcMain.handle('renameFile', (_event, oldName, newName) => db.renameFile(oldName, newName))
+ipcMain.handle('deleteFile', (_event, filename) => db.deleteFile(filename))
 
 // New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {

@@ -2,7 +2,7 @@ import React from 'react'
 import html2canvas from "html2canvas"
 import jsPDF from "jspdf"
 import { ThemeType, FileList, FileName, ExportPdfOptions } from './types'
-import { FILE_LIST_KEY, HLJS_LIGHT, HLJS_DARK } from './config'
+import { HLJS_LIGHT, HLJS_DARK } from './config'
 
 export async function getFileList(): Promise<FileList> {
   return await window.electron.ipcRenderer.invoke('getFileList');
@@ -18,6 +18,14 @@ export async function saveFileContent(filename: FileName, content: string): Prom
 
 export async function getFileContent(filename: FileName): Promise<string> {
   return await window.electron.ipcRenderer.invoke('getFileContent', filename);
+}
+
+export async function renameFile(oldName: FileName, newName: FileName): Promise<void> {
+  await window.electron.ipcRenderer.invoke('renameFile', oldName, newName);
+}
+
+export async function deleteFile(filename: FileName): Promise<void> {
+  await window.electron.ipcRenderer.invoke('deleteFile', filename);
 }
 
 export const loadHighlightStyle = (theme: string) => {
