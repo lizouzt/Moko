@@ -18,11 +18,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px 8px 24px;
+  padding: 8px 16px;
+  flex-wrap: wrap;
   background: var(--td-bg-color-container);
-  border-radius: var(--td-radius-default);
-  border-bottom: 1px solid var(--td-bg-color-secondarycontainer);
-  z-index: 2;
+  border-bottom: 1px solid var(--td-bg-color-page);
+}
+
+.toolbarLeft, .toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .toolbarLeft {
@@ -43,6 +48,23 @@
   border-radius: 4px;
   padding: 0 4px;
   min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 4px;
+  }
+  .toolbarLeft, .toolbarRight {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+  .markdownToolbar {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
 }
 
 .mainPanel {

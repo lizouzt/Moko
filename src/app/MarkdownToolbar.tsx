@@ -1,36 +1,70 @@
-import React, { useState } from 'react';
-import { Space, Button, Tooltip, Radio } from 'tdesign-react';
-import { MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, FileImportIcon, FileExportIcon, SettingIcon } from 'tdesign-icons-react';
+import React, { useCallback, useState } from 'react'
+import { Space, Button, Tooltip, Radio, Dropdown } from 'tdesign-react'
+import { MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, MoreIcon, FileImportIcon, FileExportIcon, SettingIcon } from 'tdesign-icons-react'
 import { useAppDispatch } from 'modules/store'
-import { toggleSetting } from 'modules/global';
-import MarkdownToolbarButtons from './MarkdownToolbarButtons';
-import styles from './index.module.less';
+import { toggleSetting } from 'modules/global'
+import MarkdownToolbarButtons from './MarkdownToolbarButtons'
+import styles from './index.module.less'
 
-type SplitMode = 'vertical' | 'horizontal' | 'edit' | 'preview';
+type SplitMode = 'vertical' | 'horizontal' | 'edit' | 'preview'
 
 interface Props {
-  monacoEditorRef: React.RefObject<any>;
-  splitMode: SplitMode;
-  setSplitMode: (mode: SplitMode) => void;
-  onNewFile: () => void;
-  onImport: () => void;
-  onSave: () => void;
-  onDownload: () => void;
-  onExportPdf: () => void;
-  onShowHistory: () => void;
+  monacoEditorRef: React.RefObject<any>
+  splitMode: SplitMode
+  setSplitMode: (mode: SplitMode) => void
+  onNewFile: () => void
+  onImport: () => void
+  onSave: () => void
+  onDownload: () => void
+  onExportPdf: () => void
+  onShowHistory: () => void
 }
 
+enum RightBtnEvent {
+  New = 'onNewFile',
+  Import = 'onImport',
+  Save = 'onSave',
+  Download = 'onDownload',
+  Pdf = 'onExportPdf',
+  Setting = 'onSetting',
+}
+
+const rightButtons = [
+  { key: 'new', icon: <AddIcon />, tooltip: '新建', onClick: RightBtnEvent.New },
+  { key: 'import', icon: <FileImportIcon />, tooltip: '导入', onClick: RightBtnEvent.Import },
+  { key: 'save', icon: <SaveIcon />, tooltip: '保存', onClick: RightBtnEvent.Save },
+  { key: 'download', icon: <DownloadIcon />, tooltip: '下载', onClick: RightBtnEvent.Download },
+  { key: 'pdf', icon: <FileExportIcon />, tooltip: '导出PDF', onClick: RightBtnEvent.Pdf },
+  { key: 'setting', icon: <SettingIcon />, tooltip: '设置', onClick: RightBtnEvent.Setting },
+]
+
+/** 小屏幕适配尺寸阈值 */
+const MINIVIEWWIDTH = 800
+
 const MarkdownToolbar: React.FC<Props> = ({
-  monacoEditorRef, splitMode, setSplitMode,
-  onNewFile, onImport, onSave, onDownload, 
-  onExportPdf, onShowHistory
+  monacoEditorRef, splitMode, setSplitMode, onShowHistory, ...restProps
 }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= MINIVIEWWIDTH)
   const [exporting, setExporting] = useState(false)
   const dispatch = useAppDispatch()
 
-  const onSetting = () => {
-    dispatch(toggleSetting())
-  }
+  const buttonHandlers = useCallback(async (key: RightBtnEvent) => {
+    if (key === RightBtnEvent.Setting) {
+      dispatch(toggleSetting())
+    } else if (key === RightBtnEvent.Pdf) {
+      setExporting(true)
+      await restProps[key]()
+      setExporting(false)
+    } else {
+      await restProps[key as keyof typeof restProps]?.()
+    }
+  }, [])
+
+  React.useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= MINIVIEWWIDTH)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   return (
     <div className={styles.toolbar}>
@@ -58,35 +92,37 @@ const MarkdownToolbar: React.FC<Props> = ({
         </Radio.Group>
       </Space>
       <Space align="center" size={8} className={styles.toolbarRight}>
-        <Tooltip placement='bottom' showArrow content="新建文件" >
-          <Button size="small" icon={<AddIcon />} onClick={onNewFile} />
-        </Tooltip>
-        <Tooltip placement='bottom' showArrow content="导入本地Markdown">
-          <Button size="small" icon={<FileImportIcon />} onClick={onImport} />
-        </Tooltip>
-        <Tooltip placement='bottom' showArrow content="保存到记录">
-          <Button size="small" theme="primary" icon={<SaveIcon />} onClick={onSave} />
-        </Tooltip>
-        <Tooltip placement='bottom' showArrow content="下载 Markdown">
-          <Button size="small" icon={<DownloadIcon />} onClick={onDownload} />
-        </Tooltip>
-        <Tooltip placement='bottom' showArrow content="导出预览 PDF">
-          <Button size="small" icon={<FileExportIcon />} 
-            onClick={async () => {
-              setExporting(true)
-              await onExportPdf()
-              setExporting(false)
-            }}
-            loading={exporting}
-          />
-        </Tooltip>
-
-        <Tooltip placement='bottom' showArrow content="设置">
-          <Button size="small" icon={<SettingIcon />} variant="text" onClick={onSetting} />
-        </Tooltip>
+        {
+          (isMobile ? rightButtons.slice(0, 2) : rightButtons).map(btn => (
+            <Tooltip key={btn.key} content={btn.tooltip} placement="bottom">
+              <Button
+                shape="circle"
+                variant="text"
+                size="large"
+                icon={btn.icon}
+                onClick={() => buttonHandlers(btn.onClick)}
+              />
+            </Tooltip>
+          ))
+        }
+        {isMobile ? (
+          <Dropdown
+            placement="bottom"
+            trigger="click"
+            options={rightButtons.slice(2).map(item => ({
+              value: item.key,
+              content: item.tooltip,
+              prefixIcon: item.icon,
+              loading: item.onClick === RightBtnEvent.Pdf && exporting,
+              onClick: () => buttonHandlers(item.onClick),
+            }))}
+          >
+            <Button shape="circle" variant="text" size="large" icon={<MoreIcon />} />
+          </Dropdown>
+        ) : null}
       </Space>
     </div>
   )
 }
 
-export default MarkdownToolbar;
+export default MarkdownToolbar

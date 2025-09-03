@@ -1,8 +1,5 @@
 import { FormRule } from 'tdesign-react'
 
-/** 高德key */
-export const AMapKey = '7307eae86e9c7a5ee6da324669c0d5de'
-
 /** 通用状态值字典 */
 export enum COMMONSTATUS {
   ACTIVE = 0,
