@@ -2,20 +2,23 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import log from 'electron-log'
 import { release } from 'node:os'
 import { join } from 'node:path'
+import { updateElectronApp } from 'update-electron-app'
 import * as db from './app/db'
-import { update } from './update'
 
-// require('update-electron-app')()
+log.transports.file.fileName = 'main.log'
+log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}'
+log.transports.file.maxSize = 1048576
+
+updateElectronApp({
+  updateInterval: '24 hour',
+  logger: log
+})
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 // Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
-
-log.transports.file.fileName = 'main.log'
-log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}'
-log.transports.file.maxSize = 1048576
 
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -79,7 +82,8 @@ const createWindow = () => {
   })
 
   // Apply electron-updater
-  update(mainWindow)
+  // import { update } from './update'
+  // update(mainWindow, log)
 }
 
 // This method will be called when Electron has finished
