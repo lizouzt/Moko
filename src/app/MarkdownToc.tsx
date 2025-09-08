@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { Tooltip } from 'tdesign-react'
 import { MenuIcon } from 'tdesign-icons-react'
+import { useTranslation } from 'react-i18next'
 import commonStyle from 'styles/common.module.less'
 import styles from './index.module.less'
 import { Button } from 'tdesign-react'
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const MarkdownToc: React.FC<Props> = ({ previewRef, content }) => {
+  const { t } = useTranslation()
   const [toc, setToc] = useState<TocItem[]>([])
   const [visible, setVisible] = useState(false)
 
@@ -45,7 +47,7 @@ const MarkdownToc: React.FC<Props> = ({ previewRef, content }) => {
   }
 
   if (!visible || toc.length === 0) return (
-    <Tooltip content="目录">
+    <Tooltip content={t('目录')}>
       <Button 
         variant="text"
         icon={<MenuIcon />}
@@ -58,7 +60,7 @@ const MarkdownToc: React.FC<Props> = ({ previewRef, content }) => {
   return (
     <div className={styles.tocFloatBox}>
       <div className={styles.tocHeader}>
-        <span>目录</span>
+        <span>{t('目录')}</span>
         <span className={styles.tocClose} onClick={() => setVisible(!visible)}>×</span>
       </div>
       <div className={classNames(commonStyle.scrollbar, styles.tocContent)}>

@@ -1,3 +1,6 @@
+import { FileList } from "./types"
+import i18next from "i18n/config"
+
 export const AUTO_SAVE_INTERVAL = 60000
 
 export const FILE_LIST_KEY = 'markdown-file-list'
@@ -35,7 +38,7 @@ export const markdownItConfig = {
   quotes: '“”‘’',
 }
 
-export const UNTITLED_PREFIX = '未命名'
+export const UNTITLED_PREFIX: string = i18next.t('未命名')
 
 // 获取内容第一行前10个字作为文件名
 export const getAutoFileName = (text: string, fileList: string[]) => {
@@ -53,7 +56,7 @@ export const getAutoFileName = (text: string, fileList: string[]) => {
 }
 
 // 生成唯一未命名文件名
-export const getUniqueUntitledName = (fileList) => {
+export const getUniqueUntitledName = (fileList: FileList) => {
   let idx = 1
   let name = `${UNTITLED_PREFIX}-${idx}`
   while (fileList.includes(name)) {

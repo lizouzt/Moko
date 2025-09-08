@@ -4,6 +4,8 @@ import {
   MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, MoreIcon,
   FileImportIcon, FileExportIcon, SettingIcon
 } from 'tdesign-icons-react'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18n/config'
 import { useAppDispatch } from 'modules/store'
 import { toggleSetting } from 'modules/global'
 import MarkdownToolbarButtons from './MarkdownToolbarButtons'
@@ -35,12 +37,12 @@ enum RightBtnEvent {
 }
 
 const rightButtons = [
-  { key: 'new', icon: <AddIcon />, tooltip: '新建', onClick: RightBtnEvent.New },
-  { key: 'import', icon: <FileImportIcon />, tooltip: '导入', onClick: RightBtnEvent.Import },
-  { key: 'save', icon: <SaveIcon />, tooltip: '保存', onClick: RightBtnEvent.Save },
-  { key: 'download', icon: <DownloadIcon />, tooltip: '下载', onClick: RightBtnEvent.Download },
-  { key: 'pdf', icon: <FileExportIcon />, tooltip: '导出PDF', onClick: RightBtnEvent.Pdf },
-  { key: 'setting', icon: <SettingIcon />, tooltip: '设置', onClick: RightBtnEvent.Setting },
+  { key: 'new', icon: <AddIcon />, tooltip: i18next.t('新建'), onClick: RightBtnEvent.New },
+  { key: 'import', icon: <FileImportIcon />, tooltip: i18next.t('导入'), onClick: RightBtnEvent.Import },
+  { key: 'save', icon: <SaveIcon />, tooltip: i18next.t('保存'), onClick: RightBtnEvent.Save },
+  { key: 'download', icon: <DownloadIcon />, tooltip: i18next.t('下载'), onClick: RightBtnEvent.Download },
+  { key: 'pdf', icon: <FileExportIcon />, tooltip: i18next.t('导出PDF'), onClick: RightBtnEvent.Pdf },
+  { key: 'setting', icon: <SettingIcon />, tooltip: i18next.t('设置'), onClick: RightBtnEvent.Setting },
 ]
 
 /** 小屏幕适配尺寸阈值 */
@@ -49,6 +51,7 @@ const MINIVIEWWIDTH = 800
 const MarkdownToolbar: React.FC<Props> = ({
   monacoEditorRef, splitMode, setSplitMode, onShowHistory, ...restProps
 }) => {
+  const { t } = useTranslation()
   const [isMobile, setIsMobile] = useState(window.innerWidth <= MINIVIEWWIDTH)
   const [exporting, setExporting] = useState(false)
   const dispatch = useAppDispatch()
@@ -78,7 +81,7 @@ const MarkdownToolbar: React.FC<Props> = ({
   return (
     <Toolbar left={
         <Space align="center" size={16} className={styles.toolbarLeft}>
-          <Tooltip content="记录" placement='bottom'>
+          <Tooltip content={t('记录')} placement='bottom'>
             <Button
               shape="circle"
               variant="text"
@@ -94,10 +97,10 @@ const MarkdownToolbar: React.FC<Props> = ({
             variant="outline"
             size="small"
           >
-            <Radio.Button value="horizontal">左右分屏</Radio.Button>
-            <Radio.Button value="vertical">上下分屏</Radio.Button>
-            <Radio.Button value="edit">仅编辑</Radio.Button>
-            <Radio.Button value="preview">仅预览</Radio.Button>
+            <Radio.Button value="horizontal">{t('左右分屏')}</Radio.Button>
+            <Radio.Button value="vertical">{t('上下分屏')}</Radio.Button>
+            <Radio.Button value="edit">{t('仅编辑')}</Radio.Button>
+            <Radio.Button value="preview">{t('仅预览')}</Radio.Button>
           </Radio.Group>
         </Space>
       }

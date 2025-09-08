@@ -46,15 +46,6 @@ declare module '*.less' {
 
 declare module 'tvision-color'
 
-declare interface ImportMeta {
-  env: {
-    MODE: 'development' | 'test' | 'production'
-    BASE_URL: string
-    /** true表示是从主应用开发 */
-    VITE_SUBMODE?: string
-  }
-}
-
 declare type Styles = CSSProperties
 
 declare type FormResetEvent = FormEvent<HTMLFormElement>
@@ -96,5 +87,15 @@ declare global {
       quitApp: () => void,
       ipcRenderer: typeof ipcRenderer,
     }
+  }
+}
+
+interface ImportMeta {
+  env: {
+    url: string
+    MODE: 'development' | 'test' | 'production'
+    BASE_URL: string
+    /** true表示是从主应用开发 */
+    VITE_SUBMODE?: string
   }
 }

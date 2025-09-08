@@ -8,6 +8,7 @@ import zhConfig from 'tdesign-react/es/locale/zh_CN'
 import enConfig from 'tdesign-react/es/locale/en_US'
 import merge from 'lodash/merge'
 import App from './layouts/index'
+import './i18n/config'
 
 import 'tdesign-react/es/style/index.css'
 import './styles/theme.less'

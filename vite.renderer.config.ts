@@ -14,6 +14,7 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         '@': path.join(__dirname, 'src'),
+        i18n: path.resolve(__dirname, './src/i18n'),
         assets: path.resolve(__dirname, './src/assets'),
         components: path.resolve(__dirname, './src/components'),
         configs: path.resolve(__dirname, './src/configs'),
@@ -39,7 +40,20 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     plugins: [
-      svgr({include: "**/*.svg?component"}),
+      svgr({
+        include: "**/*.svg?component",
+        svgrOptions: {
+          icon: true,
+          svgo: true,
+          plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+          svgoConfig: {
+            plugins: [
+              "removeTitle",
+              "removeDesc",
+            ],
+          },
+        },
+      }),
       react(),
     ],
     build: {

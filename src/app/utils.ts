@@ -1,5 +1,6 @@
 import React from 'react'
 import html2canvas from "html2canvas"
+import i18next from 'i18n/config'
 import jsPDF from "jspdf"
 import { ThemeType, FileList, FileName, ExportPdfOptions } from './types'
 import { HLJS_LIGHT, HLJS_DARK } from './config'
@@ -116,7 +117,7 @@ export const exportPdf = async (
 
   try {
     await pdf.save(`${fileName || 'markdown'}.pdf`, { returnPromise: true });
-    return '成功导出';
+    return i18next.t('成功导出');
   } catch (err: any) {
     return err.message;
   }

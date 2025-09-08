@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, startTransition, useCallba
 import { MessagePlugin, Drawer, } from 'tdesign-react'
 import classNames from 'classnames'
 import * as monaco from 'monaco-editor'
+import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'modules/store'
 import MarkdownEditor from './MarkdownEditor'
 import MarkdownPreview from './MarkdownPreview'
@@ -13,15 +14,18 @@ import styles from 'app/index.module.less'
 import MarkdownToolbar from './MarkdownToolbar'
 import { SplitMode, FileList, FileName, EditFileTitleProps } from './types'
 
-const LOCAL_KEY = 'markdown-content'
+const EditFileTitle: React.FC<EditFileTitleProps> = ({ name }) => {
+  const { t } = useTranslation()
 
-const EditFileTitle: React.FC<EditFileTitleProps> = ({ name }) => (
-  <div className={classNames('mt--1', CommonStyle.tagh2)}>
-    编辑 {name || UNTITLED_PREFIX}
-  </div>
-)
+  return (
+    <div className={classNames('mt--1', CommonStyle.tagh2)}>
+      {t('编辑')} {name || UNTITLED_PREFIX}
+    </div>
+  )
+}
 
 const MarkDown: React.FC = () => {
+  const { t } = useTranslation()
   const monacoEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const importInputRef = useRef<HTMLInputElement>(null)
@@ -58,7 +62,7 @@ const MarkDown: React.FC = () => {
       setCurrentFile(filename)
       setContent(content)
       saveFileContent(filename, content)
-      MessagePlugin.success('导入成功')
+      MessagePlugin.success(t('导入成功'))
     }
     reader.readAsText(file)
     e.target.value = ''
@@ -81,7 +85,7 @@ const MarkDown: React.FC = () => {
     saveFileContent(finalName, content)
     setCurrentFile(finalName)
     if (!isAuto) {
-      MessagePlugin.success('已保存到文件')
+      MessagePlugin.success(t('已保存到文件'))
     }
   }
 
@@ -92,12 +96,12 @@ const MarkDown: React.FC = () => {
     saveFileList(newList)
     setCurrentFile(filename)
     setContent('')
-    MessagePlugin.success('新建文件成功')
+    MessagePlugin.success(t('新建文件成功'))
   }
 
   const handleRenameFile = async (oldName: FileName, newName: FileName) => {
     if (fileList.includes(newName)) {
-      MessagePlugin.error('文件名已存在')
+      MessagePlugin.error(t('文件名已存在'))
       return
     }
     renameFile(oldName, newName)
@@ -107,7 +111,7 @@ const MarkDown: React.FC = () => {
       setCurrentFile(newName)
       setContent(await getFileContent(newName))
     }
-    MessagePlugin.success('重命名成功')
+    MessagePlugin.success(t('重命名成功'))
   }
 
   const handleDeleteFile = async (filename: FileName) => {
@@ -118,7 +122,7 @@ const MarkDown: React.FC = () => {
       setCurrentFile(newList[0])
       setContent(await getFileContent(newList[0]))
     }
-    MessagePlugin.success('删除成功')
+    MessagePlugin.success(t('删除成功'))
   }
 
   const handleDownload = () => {
@@ -129,7 +133,7 @@ const MarkDown: React.FC = () => {
     a.download = `${currentFile||'moko'}.md`
     a.click()
     URL.revokeObjectURL(url)
-    MessagePlugin.success('已下载')
+    MessagePlugin.success(t('已下载'))
   }
 
   const handleHistorySelect = async (filename: FileName) => {
@@ -151,7 +155,7 @@ const MarkDown: React.FC = () => {
 
   const handleExportPdf = async () => {
     if (!previewRef.current) {
-      MessagePlugin.error('未找到预览区域')
+      MessagePlugin.error(t('未找到预览区域'))
       return
     }
     const resultMsg = await exportPdf(previewRef.current, theme, currentFile)
@@ -221,7 +225,7 @@ const MarkDown: React.FC = () => {
       setCurrentFile(fFileName)
       setContent(await getFileContent(fFileName))
     } else {
-      setCurrentFile('未命名')
+      setCurrentFile(UNTITLED_PREFIX)
     }
   }, [])
 
@@ -253,7 +257,7 @@ const MarkDown: React.FC = () => {
           splitMode === 'edit' ? styles.hidden : ''
         )}
       >
-        <div className={classNames('mt--1', CommonStyle.tagh2)}>预览</div>
+        <div className={classNames('mt--1', CommonStyle.tagh2)}>{t('预览')}</div>
         <MarkdownPreview value={content} ref={previewRef}/>
       </div>
     </div>
@@ -276,7 +280,7 @@ const MarkDown: React.FC = () => {
         <div className={styles.splitContainer}>{renderSplit}</div>
       </div>
       <Drawer
-        header="记录"
+        header={t('记录')}
         visible={historyDrawerVisible}
         placement="left"
         size={'320px'}
