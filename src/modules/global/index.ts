@@ -4,6 +4,7 @@ import { Color } from 'tvision-color'
 import { CHART_COLORS, defaultColor, colorMap } from 'configs/color'
 import { generateColorMap, insertThemeStylesheet } from 'utils/color'
 import { RootState } from '../store'
+import i18next from 'i18n/config'
 
 const namespace = 'global'
 
@@ -69,7 +70,8 @@ export interface IGlobalState {
      * @default false
      */
     bordered?: boolean
-  }
+  },
+  language: 'zh' | 'en',
 }
 
 const defaultTheme = ETheme.light
@@ -94,6 +96,7 @@ const initialState: IGlobalState = {
   showTaskCenter: false,
   showDCenter: false,
   chartColors: CHART_COLORS[defaultTheme],
+  language: 'zh',
   siteMap: {},
   btnAuthMap: {},
   dtoTable: {
@@ -105,7 +108,7 @@ const initialState: IGlobalState = {
 
 const SETTINGCACHEKEY = '_tenfake_starter_global_settings'
 
-// 创建带有命名空间的reducer
+// 创建带有命名空间的 reducer
 const globalSlice = createSlice({
   name: namespace,
   initialState,
@@ -139,6 +142,10 @@ const globalSlice = createSlice({
 
       if (setting.dtoTable) {
         state.dtoTable = { ...state.dtoTable, ...setting.dtoTable }
+      }
+
+      if (setting.language) {
+        state.language = setting.language
       }
     },
     toggleMenu: (state, action) => {
@@ -223,6 +230,10 @@ const globalSlice = createSlice({
     updatePlatform: (state) => {
       state.platform = isMobile() ? Platform.MOBILE : Platform.PC
     },
+    toggleLanguage: (state) => {
+      const nextLanguage = state.language === 'zh' ? 'en' : 'zh'
+      state.language = nextLanguage
+    }
   },
   extraReducers: () => {},
 })
@@ -247,6 +258,7 @@ export const {
   updatePlatform,
   switchDTO,
   setSiteMap,
+  toggleLanguage,
 } = globalSlice.actions
 
 export default globalSlice.reducer

@@ -3,6 +3,7 @@ import { MessagePlugin, Drawer, } from 'tdesign-react'
 import classNames from 'classnames'
 import * as monaco from 'monaco-editor'
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18n/config'
 import { useAppSelector } from 'modules/store'
 import MarkdownEditor from './MarkdownEditor'
 import MarkdownPreview from './MarkdownPreview'
@@ -75,7 +76,6 @@ const MarkDown: React.FC = () => {
     if (isUntitled && content.trim()) {
       const autoName = getAutoFileName(content, fileList)
       if (autoName) {
-        console.log('autoName', autoName)
         finalName = autoName
       }
     }
@@ -261,7 +261,7 @@ const MarkDown: React.FC = () => {
         <MarkdownPreview value={content} ref={previewRef}/>
       </div>
     </div>
-  ), [content, splitMode, currentFile, monacoEditorRef, previewRef])
+  ), [content, splitMode, currentFile, monacoEditorRef, previewRef, i18next.language])
 
   return (
     <div className={styles.markdownRoot}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Textarea, FormRule, FormInstanceFunctions, Popconfirm, Form, PopconfirmProps } from 'tdesign-react'
 import { IResponse } from 'utils/request'
+import { useTranslation } from 'react-i18next'
 
 const { FormItem } = Form
 
@@ -19,7 +20,8 @@ export default (
     onConfirm: ({ reason }: { reason: string }) => Promise<Partial<IResponse>>
   } & Omit<PopconfirmProps, 'onConfirm' | 'content'>>,
 ) => {
-  const { title, label = '请输入', onConfirm, visibleCheck, ...rest } = props
+  const { t } = useTranslation()
+  const { title, label = t('请输入'), onConfirm, visibleCheck, ...rest } = props
   const [isPosting, setPosting] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
 
@@ -59,7 +61,7 @@ export default (
       placement={'bottom-left'}
       confirmBtn={
         <Button theme='primary' loading={isPosting} size='small' onClick={() => formRef.current?.submit()}>
-          确认
+          {t('确认')}
         </Button>
       }
       onCancel={() => {

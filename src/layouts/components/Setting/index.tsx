@@ -5,8 +5,10 @@ import {
   switchTheme,
   switchColor,
   openSystemTheme,
+  toggleLanguage,
 } from 'modules/global'
 import { useTranslation } from 'react-i18next'
+import { TranslateIcon } from 'tdesign-icons-react'
 import i18next from 'i18n/config'
 import { ETheme, ESettingTheme } from 'types/index.d'
 import RadioColor from './RadioColor'
@@ -17,6 +19,7 @@ import Dark from 'assets/svg/assets-setting-dark.svg?component'
 import System from 'assets/svg/assets-setting-auto.svg?component'
 
 import Style from './index.module.less'
+import { Button } from 'tdesign-react'
 
 const themeList = [
   {
@@ -61,6 +64,13 @@ export default memo(() => {
 
       <div className={Style.settingTitle}>{t('主题色')}</div>
       <RadioColor defaultValue={globalState.color} onChange={(value) => dispatch(switchColor(value))} />
+
+      <div className={Style.settingTitle}>{t('语言')}</div>
+      <Button 
+        variant="text"
+        icon={<TranslateIcon size={30} color={'var(--td-text-color-primary)'}/>}
+        onClick={() => dispatch(toggleLanguage())} 
+      />
     </div>
   )
 })

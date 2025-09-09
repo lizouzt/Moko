@@ -45,5 +45,9 @@
   "黑暗": "Dark",
   "跟随系统": "System",
   "主题模式": "Color Mode",
-  "主题色": "Theme Color"
+  "主题色": "Theme Color",
+  "语言": "Language",
+  "页面配置": "Configure",
+  "请输入": "input here",
+  "确认": "Confirm"
 }

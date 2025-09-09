@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { Space, Button, Tooltip, Radio, Dropdown, Menu } from 'tdesign-react'
 import {
   MenuUnfoldIcon, SaveIcon, AddIcon, DownloadIcon, MoreIcon,
@@ -36,15 +36,6 @@ enum RightBtnEvent {
   Setting = 'onSetting',
 }
 
-const rightButtons = [
-  { key: 'new', icon: <AddIcon />, tooltip: i18next.t('新建'), onClick: RightBtnEvent.New },
-  { key: 'import', icon: <FileImportIcon />, tooltip: i18next.t('导入'), onClick: RightBtnEvent.Import },
-  { key: 'save', icon: <SaveIcon />, tooltip: i18next.t('保存'), onClick: RightBtnEvent.Save },
-  { key: 'download', icon: <DownloadIcon />, tooltip: i18next.t('下载'), onClick: RightBtnEvent.Download },
-  { key: 'pdf', icon: <FileExportIcon />, tooltip: i18next.t('导出PDF'), onClick: RightBtnEvent.Pdf },
-  { key: 'setting', icon: <SettingIcon />, tooltip: i18next.t('设置'), onClick: RightBtnEvent.Setting },
-]
-
 /** 小屏幕适配尺寸阈值 */
 const MINIVIEWWIDTH = 800
 
@@ -55,6 +46,17 @@ const MarkdownToolbar: React.FC<Props> = ({
   const [isMobile, setIsMobile] = useState(window.innerWidth <= MINIVIEWWIDTH)
   const [exporting, setExporting] = useState(false)
   const dispatch = useAppDispatch()
+
+  const rightButtons = useMemo(() => {
+    return [
+      { key: 'new', icon: <AddIcon />, tooltip: i18next.t('新建'), onClick: RightBtnEvent.New },
+      { key: 'import', icon: <FileImportIcon />, tooltip: i18next.t('导入'), onClick: RightBtnEvent.Import },
+      { key: 'save', icon: <SaveIcon />, tooltip: i18next.t('保存'), onClick: RightBtnEvent.Save },
+      { key: 'download', icon: <DownloadIcon />, tooltip: i18next.t('下载'), onClick: RightBtnEvent.Download },
+      { key: 'pdf', icon: <FileExportIcon />, tooltip: i18next.t('导出PDF'), onClick: RightBtnEvent.Pdf },
+      { key: 'setting', icon: <SettingIcon />, tooltip: i18next.t('设置'), onClick: RightBtnEvent.Setting },
+    ]
+  }, [i18next.language])
 
   const buttonHandlers = useCallback(async (key: RightBtnEvent) => {
     if (key === RightBtnEvent.Setting) {

@@ -1,6 +1,7 @@
 import React, { memo, useEffect } from 'react'
 import { Drawer, Layout } from 'tdesign-react'
 import throttle from 'lodash/throttle'
+import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppDispatch } from 'modules/store'
 import {
   selectGlobal,
@@ -14,11 +15,13 @@ import {
   Platform,
   updatePlatform,
 } from 'modules/global'
+import i18next from 'i18n/config'
 import Setting from './components/Setting'
 import AppLayout from './components/AppLayout'
 import Style from './index.module.less'
 
 export default memo(() => {
+  const { t } = useTranslation()
   const globalState = useAppSelector(selectGlobal)
   const dispatch = useAppDispatch()
 
@@ -28,6 +31,10 @@ export default memo(() => {
     dispatch(switchTheme(globalState.theme))
     dispatch(switchColor(globalState.color))
   }, [globalState.theme, globalState.color])
+
+  useEffect(() => {
+    i18next.changeLanguage(globalState.language)
+  }, [globalState.language])
 
   useEffect(() => {
     dispatch(restoreSetting())
@@ -40,13 +47,16 @@ export default memo(() => {
         dispatch(toggleMenu(false))
       }
     }, 100)
-    const handleShutDown = () => dispatch(cacheSetting())
+
+    const handleClose = async (event: BeforeUnloadEvent) => {
+      await dispatch(cacheSetting())
+    }
 
     window.addEventListener('resize', handleResize)
-    window.addEventListener('beforeunload', handleShutDown)
+    window.addEventListener('beforeunload', handleClose)
 
     return () => {
-      window.removeEventListener('beforeunload', handleShutDown)
+      window.removeEventListener('beforeunload', handleClose)
       window.removeEventListener('resize', handleResize)
     }
   }, [])
@@ -60,7 +70,7 @@ export default memo(() => {
         className={Style.settingDrawer}
         size={globalState.platform === Platform.PC ? '458px' : '100%'}
         footer={false}
-        header='页面配置'
+        header={t('页面配置')}
         onClose={() => dispatch(toggleSetting())}
       >
         <Setting />
