@@ -25,43 +25,44 @@ const store = new Store<{
 })
 
 // 获取所有文件名列表
-export function getFileList(): string[] {
-  return store.get('fileList') ?? []
+export async function getFileList(): Promise<string[]> {
+  return await store.get('fileList') ?? []
 }
 
 // 保存文件名列表（自动同步 files 字典，删除不存在的内容）
-export function saveFileList(list: string[]): void {
-  const files = store.get('files') ?? {}
+export async function saveFileList(list: string[]): Promise<void> {
+  const files = await store.get('files') ?? {}
   Object.keys(files).forEach(f => {
     if (!list.includes(f)) delete files[f]
   })
-  store.set('files', files)
-  store.set('fileList', list)
+  await store.set('files', files)
+  await store.set('fileList', list)
 }
 
 // 保存文件内容（只保存内容，不自动补全 fileList）
-export function saveFileContent(filename: string, content: string): void {
-  store.set(`files.${filename}`, content)
+export async function saveFileContent(filename: string, content: string): Promise<void> {
+  await store.set(`files.${filename}`, content)
 }
 
 // 获取文件内容（只读单个 key）
-export function getFileContent(filename: string): string {
-  return store.get(`files.${filename}`) ?? ''
+export async function getFileContent(filename: string): Promise<string> {
+  return await store.get(`files.${filename}`) ?? ''
 }
 
 // 删除文件（只删单个 key，自动同步 fileList）
-export function deleteFile(filename: string): void {
-  store.delete(`files.${filename}`)
-  let fileList = store.get('fileList') ?? []
+export async function deleteFile(filename: string): Promise<void> {
+  await store.delete(`files.${filename}`)
+  let fileList = await store.get('fileList') ?? []
   fileList = fileList.filter(f => f !== filename)
-  store.set('fileList', fileList)
+  await store.set('fileList', fileList)
 }
 
 // 文件重命名
-export function renameFile(oldName: string, newName: string): void {
-  const content = getFileContent(oldName)
-  saveFileContent(newName, content)
-  deleteFile(oldName)
-  let fileList = getFileList().map(f => (f === oldName ? newName : f))
-  saveFileList(fileList)
+export async function renameFile(oldName: string, newName: string): Promise<void> {
+  const content = await getFileContent(oldName)
+  await saveFileContent(newName, content)
+
+  let fileList = await store.get('fileList') ?? []
+  fileList = fileList.map(f => f === oldName ? newName : f)
+  await store.set('fileList', fileList)
 }

@@ -39,9 +39,9 @@ const MarkDown: React.FC = () => {
   const [splitMode, setSplitMode] = useState<SplitMode>('horizontal')
   const [historyDrawerVisible, setHistoryDrawerVisible] = useState<boolean>(false)
 
-  const handleContentChange = (val: string) => {
+  const handleContentChange = async (val: string) => {
     setContent(val)
-    saveFileContent(currentFile, content)
+    await saveFileContent(currentFile, content)
   }
 
   const handleImportFile = () => {
@@ -52,48 +52,50 @@ const MarkDown: React.FC = () => {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = () => {
+    reader.onload = async () => {
       const content = reader.result as string
       const filename = file.name.replace(/\.md|\.markdown$/i, '')
       if (!fileList.includes(filename)) {
         const newList: FileList = [filename, ...fileList]
         setFileList(newList)
-        saveFileList(newList)
+        await saveFileList(newList)
       }
       setCurrentFile(filename)
       setContent(content)
-      saveFileContent(filename, content)
+      await saveFileContent(filename, content)
       MessagePlugin.success(t('导入成功'))
     }
     reader.readAsText(file)
     e.target.value = ''
   }
 
-  const handleSave = async (isAuto: boolean = false) => {
-    let filename: FileName = currentFile
-    const isUntitled = new RegExp(`^${UNTITLED_PREFIX}-\\d+$`).test(filename)
-    let finalName: FileName = filename
+  const handleSave = useCallback(async (isAuto: boolean = false) => {
+    let finalName: FileName = currentFile
+    const isUntitled = new RegExp(`^${UNTITLED_PREFIX}-\\d+$`).test(finalName)
     if (isUntitled && content.trim()) {
       const autoName = getAutoFileName(content, fileList)
       if (autoName) {
         finalName = autoName
       }
     }
-    const newList: FileList = [finalName, ...fileList.filter(f => f !== filename && f !== finalName)]
-    setFileList(newList)
-    saveFileList(newList)
-    saveFileContent(finalName, content)
+
     setCurrentFile(finalName)
+    await saveFileContent(finalName, content)
+    
     if (!isAuto) {
+      const fList = await getFileList()
+      const newList: FileList = [finalName, ...fList.filter(f => f !== currentFile)]
+      await saveFileList(newList)
+      setFileList(newList)
       MessagePlugin.success(t('已保存到文件'))
     }
-  }
+  }, [currentFile, content])
 
-  const handleNewFile = () => {
+  const handleNewFile = async () => {
     const filename: FileName = getUniqueUntitledName(fileList)
     const newList: FileList = [filename, ...fileList]
     setFileList(newList)
-    saveFileList(newList)
+    await saveFileList(newList)
     setCurrentFile(filename)
     setContent('')
     MessagePlugin.success(t('新建文件成功'))
@@ -104,7 +106,7 @@ const MarkDown: React.FC = () => {
       MessagePlugin.error(t('文件名已存在'))
       return
     }
-    renameFile(oldName, newName)
+    await renameFile(oldName, newName)
     const newList: FileList = await getFileList()
     setFileList(newList)
     if (currentFile === oldName) {
@@ -115,7 +117,7 @@ const MarkDown: React.FC = () => {
   }
 
   const handleDeleteFile = async (filename: FileName) => {
-    deleteFile(filename)
+    await deleteFile(filename)
     const newList: FileList = await getFileList()
     setFileList(newList)
     if (currentFile === filename && newList.length > 0) {
@@ -136,22 +138,17 @@ const MarkDown: React.FC = () => {
     MessagePlugin.success(t('已下载'))
   }
 
-  const handleHistorySelect = async (filename: FileName) => {
-    if (new RegExp(`^${UNTITLED_PREFIX}-\\d+$`).test(currentFile) && !content.trim()) {
-      const newList: FileList = fileList.filter(f => f !== currentFile)
-      setFileList(newList)
-      saveFileList(newList)
-    }
+  const handleHistorySelect = useCallback(async (filename: FileName) => {
     if (filename !== currentFile) {
-      handleSave(true)
+      await handleSave(true)
       await setCurrentFile(filename)
-      await setContent(await getFileContent(filename))
+      setContent(await getFileContent(filename))
       startTransition(() => {
         monacoEditorRef.current?.setScrollTop(0)
       })
     }
     setHistoryDrawerVisible(false)
-  }
+  }, [handleSave, currentFile, monacoEditorRef.current])
 
   const handleExportPdf = async () => {
     if (!previewRef.current) {
@@ -286,6 +283,7 @@ const MarkDown: React.FC = () => {
         size={'320px'}
         onClose={() => setHistoryDrawerVisible(false)}
         footer={null}
+        destroyOnClose={true}
         className={styles.historyDrawer}
       >
         <MarkdownHistory

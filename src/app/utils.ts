@@ -22,7 +22,7 @@ export async function getFileContent(filename: FileName): Promise<string> {
 }
 
 export async function renameFile(oldName: FileName, newName: FileName): Promise<void> {
-  await window.electron.ipcRenderer.invoke('renameFile', oldName, newName);
+  return new Promise(resolve => {window.electron.ipcRenderer.invoke('renameFile', oldName, newName).finally(() => {resolve()})})
 }
 
 export async function deleteFile(filename: FileName): Promise<void> {
