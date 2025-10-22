@@ -1,7 +1,7 @@
 {
   "name": "moko",
   "productName": "moko",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Markdown Editor And Preview For Free",
   "main": ".vite/build/main.js",
   "scripts": {
