@@ -91,8 +91,9 @@
   flex: 1;
   min-height: 0;
   min-width: 0;
-  gap: 20px;
+  gap: 0;
   overflow: hidden;
+  align-items: stretch;
 }
 
 .splitVertical {
@@ -101,8 +102,32 @@
   flex: 1;
   min-height: 0;
   min-width: 0;
-  gap: 20px;
+  gap: 0;
   overflow: hidden;
+  align-items: stretch;
+}
+
+.splitter {
+  flex-shrink: 0;
+  background-color: var(--td-bg-color-page);
+  transition: background-color 0.2s ease;
+  user-select: none;
+  cursor: grab;
+}
+
+.splitHorizontal > .splitter {
+  width: 9px;
+  margin: 0 2px;
+  margin-bottom: 20px;
+}
+
+.splitVertical > .splitter {
+  height: 9px;
+  margin: 2px 20px;
+}
+
+.splitter:hover {
+  background-color: var(--td-brand-color-active);
 }
 
 .splitPanel {

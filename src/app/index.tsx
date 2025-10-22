@@ -31,6 +31,7 @@ const MarkDown: React.FC = () => {
   const previewRef = useRef<HTMLDivElement>(null)
   const importInputRef = useRef<HTMLInputElement>(null)
   const scrollSyncFlag = useRef<'editor' | 'preview' | null>(null)
+  const splitContainerRef = useRef<HTMLDivElement>(null)
 
   const { theme } = useAppSelector((state) => state.global)
   const [content, setContent] = useState<string>('')
@@ -38,6 +39,8 @@ const MarkDown: React.FC = () => {
   const [currentFile, setCurrentFile] = useState<FileName>('')
   const [splitMode, setSplitMode] = useState<SplitMode>('horizontal')
   const [historyDrawerVisible, setHistoryDrawerVisible] = useState<boolean>(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [editorSize, setEditorSize] = useState(50)
 
   const handleContentChange = async (val: string) => {
     setContent(val)
@@ -230,35 +233,98 @@ const MarkDown: React.FC = () => {
     initData()
   }, [])
 
-  const renderSplit = useMemo(() => (
-    <div className={classNames({
-      [styles.splitHorizontal]: splitMode !== 'vertical',
-      [styles.splitVertical]: splitMode === 'vertical',
-    })}>
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !splitContainerRef.current) return
+
+      const rect = splitContainerRef.current.getBoundingClientRect()
+      let newSize = 0
+
+      if (splitMode === 'vertical') {
+        newSize = ((e.clientY - rect.top) / rect.height) * 100
+      } else {
+        newSize = ((e.clientX - rect.left) / rect.width) * 100
+      }
+
+      if (newSize < 10) newSize = 10
+      if (newSize > 90) newSize = 90
+      
+      setEditorSize(newSize)
+    }
+
+    const handleMouseUp = () => {
+      setIsDragging(false)
+    }
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging, splitMode])
+
+  useEffect(() => {
+    setEditorSize(50)
+  }, [splitMode])
+
+  const renderSplit = useMemo(() => {
+    const editorStyle = {
+      flexBasis: splitMode === 'edit' || splitMode === 'preview' ? '100%' : `${editorSize}%`,
+    }
+    const previewStyle = {
+      flexBasis: splitMode === 'edit' || splitMode === 'preview' ? '100%' : `${100 - editorSize}%`,
+    }
+
+    return (
       <div
-        className={classNames(
-          'p-5',
-          styles.splitPanel,
-          styles.splitCardEdit,
-          splitMode === 'preview' ? styles.hidden : ''
-        )}
+        ref={splitContainerRef}
+        className={classNames({
+          [styles.splitHorizontal]: splitMode !== 'vertical',
+          [styles.splitVertical]: splitMode === 'vertical',
+        })}
       >
-        <EditFileTitle name={currentFile}/>
-        <MarkdownEditor value={content} onChange={handleContentChange} ref={monacoEditorRef}/>
-      </div>
-      <div
-        className={classNames(
-          'p-5',
-          styles.splitPanel,
-          styles.splitCardPreview,
-          splitMode === 'edit' ? styles.hidden : ''
+        <div
+          className={classNames(
+            'p-5',
+            styles.splitPanel,
+            styles.splitCardEdit,
+            splitMode === 'preview' ? styles.hidden : ''
+          )}
+          style={editorStyle}
+        >
+          <EditFileTitle name={currentFile}/>
+          <MarkdownEditor value={content} onChange={handleContentChange} ref={monacoEditorRef}/>
+        </div>
+        {splitMode !== 'edit' && splitMode !== 'preview' && (
+          <div
+            className={styles.splitter}
+            onMouseDown={handleMouseDown}
+          />
         )}
-      >
-        <div className={classNames('mt--1', CommonStyle.tagh2)}>{t('预览')}</div>
-        <MarkdownPreview value={content} ref={previewRef}/>
+        <div
+          className={classNames(
+            'p-5',
+            styles.splitPanel,
+            styles.splitCardPreview,
+            splitMode === 'edit' ? styles.hidden : ''
+          )}
+          style={previewStyle}
+        >
+          <div className={classNames('mt--1', CommonStyle.tagh2)}>{t('预览')}</div>
+          <MarkdownPreview value={content} ref={previewRef}/>
+        </div>
       </div>
-    </div>
-  ), [content, splitMode, currentFile, monacoEditorRef, previewRef, i18next.language])
+    )
+  }, [content, splitMode, currentFile, monacoEditorRef, previewRef, i18next.language, isDragging, editorSize])
 
   return (
     <div className={styles.markdownRoot}>

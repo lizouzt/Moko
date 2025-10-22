@@ -20,9 +20,9 @@
   "下载": "Download",
   "导出PDF": "Export PDF",
   "设置": "Setting",
-  "左右分屏": "Split View LR",
-  "上下分屏": "Split View UD",
-  "仅编辑": "Editor View",
+  "左右分屏": "LR",
+  "上下分屏": "UD",
+  "仅编辑": "Editor",
   "仅预览": "Preview",
   "未命名": "Unnamed",
   "加粗": "Bold",
@@ -49,5 +49,8 @@
   "语言": "Language",
   "页面配置": "Configure",
   "请输入": "input here",
-  "确认": "Confirm"
+  "确认": "Confirm",
+  "表格": "Table",
+  "表头": "header",
+  "内容": "content"
 }
