@@ -208,7 +208,7 @@ const MarkDown: React.FC = () => {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [content])
+  }, [handleSave])
 
   useEffect(() => {
     const timer = setInterval(() => {
