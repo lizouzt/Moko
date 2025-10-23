@@ -201,9 +201,29 @@ const MarkDown: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-        e.preventDefault()
-        handleSave()
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case 's':
+            e.preventDefault()
+            handleSave()
+            break
+          case '1':
+            e.preventDefault()
+            setSplitMode('horizontal')
+            break
+          case '2':
+            e.preventDefault()
+            setSplitMode('vertical')
+            break
+          case '3':
+            e.preventDefault()
+            setSplitMode('edit')
+            break
+          case '4':
+            e.preventDefault()
+            setSplitMode('preview')
+            break
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
