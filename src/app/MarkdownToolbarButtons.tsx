@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Space, Button, Tooltip, Dropdown } from 'tdesign-react'
 import {
   TextformatBoldIcon, TextformatItalicIcon, QuoteIcon, CodeIcon,
-  ListIcon, LinkIcon, ImageIcon, ViewListIcon, MoreIcon, TableIcon,
+  ListNumberedIcon, LinkIcon, ImageIcon, ViewListIcon, MoreIcon, TableIcon,
 } from 'tdesign-icons-react'
 import i18next from 'i18n/config'
 import styles from './index.module.less'
@@ -25,7 +25,7 @@ const MarkdownToolbarButtons: React.FC<Props> = ({ editorRef }) => {
       { key: 'code', icon: <CodeIcon />, tooltip: i18next.t('代码块'), insert: `\n\`\`\`js\n${i18next.t('代码内容')}\n\`\`\`\n`, select: [7, 11] },
       { key: 'table', icon: <TableIcon />, tooltip: i18next.t('表格'), insert: `\n| ${i18next.t('表头')}1 | ${i18next.t('表头')}2 | ${i18next.t('表头')}3 |\n| --- | --- | --- |\n| ${i18next.t('内容')} | ${i18next.t('内容')} | ${i18next.t('内容')} |\n`, select: [3, 7] },
       { key: 'ul', icon: <ViewListIcon />, tooltip: i18next.t('无序列表'), insert: `\n- ${i18next.t('列表项')}1\n- ${i18next.t('列表项')}2\n`, select: [3, 7] },
-      { key: 'ol', icon: <ListIcon />, tooltip: i18next.t('有序列表'), insert: `\n1. ${i18next.t('列表项')}1\n2. ${i18next.t('列表项')}2\n`, select: [3, 7] },
+      { key: 'ol', icon: <ListNumberedIcon />, tooltip: i18next.t('有序列表'), insert: `\n1. ${i18next.t('列表项')}1\n2. ${i18next.t('列表项')}2\n`, select: [3, 7] },
       { key: 'link', icon: <LinkIcon />, tooltip: i18next.t('链接'), insert: `[${i18next.t('链接文本')}](https://)`, select: [1, 5] },
       { key: 'image', icon: <ImageIcon />, tooltip: i18next.t('图片'), insert: '![alt](url)', select: [2, 5] },
     ]

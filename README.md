@@ -119,7 +119,7 @@
 
 ## License
 
-MIT
+Apache
 
 ---
 
