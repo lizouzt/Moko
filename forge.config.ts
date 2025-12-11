@@ -25,7 +25,9 @@ const config: ForgeConfig = {
     }), 
     new MakerZIP({}, ['darwin']), 
     new MakerRpm({}), 
-    new MakerDMG(),
+    new MakerDMG({
+      icon: "public/icon.icns"
+    }),
     new MakerDeb({
       options: {
         icon: 'public/icon.png',
